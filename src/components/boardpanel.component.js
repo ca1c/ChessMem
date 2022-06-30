@@ -1,8 +1,10 @@
-import { Button, Grid, Modal, Paper, Select, Stack, TextField, Typography } from '@mui/material';
+import { Button, Grid, InputLabel, ListItemText, MenuItem, Modal, Paper, Select, Stack, TextField, Typography } from '@mui/material';
 import Chessboard from 'chessboardjsx';
 import React, { Component } from 'react';
 import randPos from '../lib/randPos.js';
 import BOARD_THEMES from '../lib/boardThemes.js';
+import BOARD_THEMES_OBJ from '../lib/boardThemesObj.js';
+import { Box } from '@mui/system';
 
 class BoardPanel extends Component {
     constructor(props) {
@@ -11,13 +13,14 @@ class BoardPanel extends Component {
             position: "start",
             pieceNum: "",
             optionsOpen: false,
-            boardTheme: "default"
+            boardTheme: "default",
         }
 
         this.randomPosition = this.randomPosition.bind(this);
         this.resetPosition = this.resetPosition.bind(this);
         this.toggleOptions = this.toggleOptions.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.changeBoardTheme = this.changeBoardTheme.bind(this);
     }
 
     randomPosition() {
@@ -38,6 +41,12 @@ class BoardPanel extends Component {
         }))
     }
 
+    changeBoardTheme(e) {
+        this.setState({
+            boardTheme: e.target.value
+        })
+    }
+
     handleInputChange(e) {
         const { name, value } = e.target;
         this.setState({
@@ -46,6 +55,7 @@ class BoardPanel extends Component {
     }
 
     render() {
+        console.log(BOARD_THEMES_OBJ["default"]["dark"]);
         return(
             <div>
                 <Grid 
@@ -56,7 +66,11 @@ class BoardPanel extends Component {
                     alignItems="center"
                 >
                     <Grid item>
-                        <Chessboard position={this.state.position}/>
+                        <Chessboard 
+                            position={this.state.position}
+                            darkSquareStyle={{backgroundColor: BOARD_THEMES_OBJ[this.state.boardTheme]["dark"]}}
+                            lightSquareStyle={{backgroundColor: BOARD_THEMES_OBJ[this.state.boardTheme]["light"]}}
+                        />
                     </Grid>
                     <Grid item>
                         <Stack direction="row">
@@ -100,6 +114,38 @@ class BoardPanel extends Component {
                                     </Grid>
                                     <Grid item>
                                         <TextField name="timerAmount" label="Timer Amount (s)" variant="outlined"/>
+                                    </Grid>
+                                    <Grid item>
+                                        <InputLabel>Board Theme</InputLabel>
+                                        <Select
+                                            
+                                            value={this.state.boardTheme}
+                                            label="Board Theme"
+                                            onChange={this.changeBoardTheme}
+                                        >
+                                            {BOARD_THEMES.map((bTheme) => (
+                                                <MenuItem value={bTheme.name}>
+                                                    <Box sx={{
+                                                        width: "25px",
+                                                        height: "25px",
+                                                        background: bTheme.dark,
+                                                        margin: "0",
+                                                        padding: "0",
+                                                    }}/>
+                                                    <Box sx={{
+                                                        width: "25px",
+                                                        height: "25px",
+                                                        background: bTheme.light,
+                                                        margin: "0",
+                                                        padding: "0",
+                                                    }}/>
+                                                    <ListItemText primary={bTheme.name} />
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </Grid>
+                                    <Grid item>
+                                        <Button onClick={this.toggleOptions}>Close</Button>
                                     </Grid>
                                 </Grid>
                             </Paper>
