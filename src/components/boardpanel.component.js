@@ -2,6 +2,7 @@ import { Button, Grid, InputLabel, ListItemText, MenuItem, Modal, Paper, Select,
 import Chessboard from 'chessboardjsx';
 import React, { Component } from 'react';
 import randPos from '../lib/randPos.js';
+import compareObj from '../lib/compareObj.js';
 import BOARD_THEMES from '../lib/boardThemes.js';
 import BOARD_THEMES_OBJ from '../lib/boardThemesObj.js';
 import { Box } from '@mui/system';
@@ -11,9 +12,13 @@ class BoardPanel extends Component {
         super(props);
         this.state = {
             position: "start",
-            pieceNum: "",
+            comparisonPosition: {},
+            pieceNum: "5",
             optionsOpen: false,
             boardTheme: "default",
+            timerSeconds: "30",
+            sparePieces: true,
+            correct: false,
         }
 
         this.randomPosition = this.randomPosition.bind(this);
@@ -21,12 +26,37 @@ class BoardPanel extends Component {
         this.toggleOptions = this.toggleOptions.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.changeBoardTheme = this.changeBoardTheme.bind(this);
+        this.clearBoard = this.clearBoard.bind(this);
+        this.startComparison = this.startComparison.bind(this);
     }
 
     randomPosition() {
         this.setState((prevState) => ({
             position: randPos(parseInt(prevState.pieceNum)),
         }))
+    }
+
+    clearBoard() {
+        this.setState((prevState) => ({
+            position: "",
+            comparisonPosition: prevState.position,
+        }))
+    }
+
+    startComparison() {
+        if(compareObj(this.state.position, this.state.comparisonPosition)) {
+            console.log("correct")
+            this.setState({
+                correct: true,
+                position: "start",
+            })
+        }
+        else {
+            console.log("incorrect");
+            this.setState({
+                correct: false
+            })
+        }
     }
 
     resetPosition() {
@@ -55,7 +85,6 @@ class BoardPanel extends Component {
     }
 
     render() {
-        console.log(BOARD_THEMES_OBJ["default"]["dark"]);
         return(
             <div>
                 <Grid 
@@ -68,6 +97,8 @@ class BoardPanel extends Component {
                     <Grid item>
                         <Chessboard 
                             position={this.state.position}
+                            getPosition={position => this.setState({ position: position })}
+                            sparePieces={this.state.sparePieces}
                             darkSquareStyle={{backgroundColor: BOARD_THEMES_OBJ[this.state.boardTheme]["dark"]}}
                             lightSquareStyle={{backgroundColor: BOARD_THEMES_OBJ[this.state.boardTheme]["light"]}}
                         />
@@ -77,6 +108,8 @@ class BoardPanel extends Component {
                             <Button onClick={this.randomPosition}>Start</Button>
                             <Button onClick={this.resetPosition}>Reset</Button>
                             <Button onClick={this.toggleOptions}>Options</Button>
+                            <Button onClick={this.clearBoard}>Clear</Button>
+                            <Button onClick={this.startComparison}>Compare</Button>
                         </Stack>
                     </Grid>
                 </Grid>
@@ -113,7 +146,7 @@ class BoardPanel extends Component {
                                         <TextField name="pieceNum" label="Piece Num" variant="outlined" value={this.state.pieceNum} onChange={this.handleInputChange}/>
                                     </Grid>
                                     <Grid item>
-                                        <TextField name="timerAmount" label="Timer Amount (s)" variant="outlined"/>
+                                        <TextField name="timerSeconds" label="Timer Amount (s)" variant="outlined" value={this.state.timerSeconds} onChange={this.handleInputChange}/>
                                     </Grid>
                                     <Grid item>
                                         <InputLabel>Board Theme</InputLabel>
