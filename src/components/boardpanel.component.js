@@ -17,8 +17,9 @@ class BoardPanel extends Component {
             optionsOpen: false,
             boardTheme: "default",
             timerSeconds: "30",
-            sparePieces: true,
+            timer: "00",
             correct: false,
+            editable: false,
         }
 
         this.randomPosition = this.randomPosition.bind(this);
@@ -31,15 +32,30 @@ class BoardPanel extends Component {
     }
 
     randomPosition() {
+        let vm = this;
+
         this.setState((prevState) => ({
             position: randPos(parseInt(prevState.pieceNum)),
-        }))
+            timer: parseInt(prevState.timerSeconds)
+        }), function() {
+            let timerFunc = setInterval(function() {
+                vm.setState((prevState) => ({
+                    timer: prevState.timer - 1,
+                }))
+                if (vm.state.timer < 2) {
+                    console.log('ran');
+                    clearInterval(timerFunc);
+                    vm.clearBoard();
+                }
+            }, 1000)
+        })
     }
 
     clearBoard() {
         this.setState((prevState) => ({
             position: "",
             comparisonPosition: prevState.position,
+            editable: true,
         }))
     }
 
@@ -49,6 +65,7 @@ class BoardPanel extends Component {
             this.setState({
                 correct: true,
                 position: "start",
+                editable: false,
             })
         }
         else {
@@ -97,8 +114,8 @@ class BoardPanel extends Component {
                     <Grid item>
                         <Chessboard 
                             position={this.state.position}
-                            getPosition={position => this.setState({ position: position })}
-                            sparePieces={this.state.sparePieces}
+                            getPosition={this.state.editable ? position => this.setState({ position: position }) : position => console.log(position)}
+                            sparePieces={this.state.editable}
                             darkSquareStyle={{backgroundColor: BOARD_THEMES_OBJ[this.state.boardTheme]["dark"]}}
                             lightSquareStyle={{backgroundColor: BOARD_THEMES_OBJ[this.state.boardTheme]["light"]}}
                         />
@@ -107,9 +124,9 @@ class BoardPanel extends Component {
                         <Stack direction="row">
                             <Button onClick={this.randomPosition}>Start</Button>
                             <Button onClick={this.resetPosition}>Reset</Button>
-                            <Button onClick={this.toggleOptions}>Options</Button>
-                            <Button onClick={this.clearBoard}>Clear</Button>
+                            <Button variant="outlined" onClick={this.toggleOptions}>Options</Button>
                             <Button onClick={this.startComparison}>Compare</Button>
+                            <Button variant="contained" disabled>00:{this.state.timer}</Button>
                         </Stack>
                     </Grid>
                 </Grid>
