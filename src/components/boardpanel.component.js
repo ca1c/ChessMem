@@ -5,7 +5,7 @@ import randPos from '../lib/randPos.js';
 import compareObj from '../lib/compareObj.js';
 import BOARD_THEMES from '../lib/boardThemes.js';
 import BOARD_THEMES_OBJ from '../lib/boardThemesObj.js';
-import { Box } from '@mui/system';
+import { Box, Container } from '@mui/system';
 
 class BoardPanel extends Component {
     constructor(props) {
@@ -123,11 +123,29 @@ class BoardPanel extends Component {
                     <Grid item>
                         <Stack direction="row">
                             <Button onClick={this.randomPosition}>Start</Button>
-                            <Button onClick={this.resetPosition}>Reset</Button>
                             <Button variant="outlined" onClick={this.toggleOptions}>Options</Button>
                             <Button onClick={this.startComparison}>Compare</Button>
                             <Button variant="contained" disabled>00:{this.state.timer}</Button>
                         </Stack>
+                    </Grid>
+                    <Grid item>
+                        <Container maxWidth="sm">
+                            <Typography variant="h4">Usage</Typography>
+                            <Stack direction="column" spacing={3}>
+                                <Typography variant="body1">
+                                    First click the "Options" button and change the options to your liking. Change the piece number section to the number of pieces on the board that you wish to memorize. Change the timer seconds to the number of seconds you wish for the position to be displayed. Then (optional) change the board theme to one of the provided board themes!
+                                </Typography>
+                                <Typography>
+                                    Next click the "Start" button, a random position with the selected number of pieces will appear, the timer will then count down, take this time to memorize the position.
+                                </Typography>
+                                <Typography>
+                                    Once the timer runs out the board, position will clear, and you need to use the extra pieces outside the board to recreate the position shown
+                                </Typography>
+                                <Typography>
+                                    Once you are done recreating the position, click the "compare" button. Text will show that you are either correct or incorrect.
+                                </Typography>
+                            </Stack>
+                        </Container>
                     </Grid>
                 </Grid>
                 <Modal

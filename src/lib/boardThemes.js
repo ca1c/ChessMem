@@ -5,6 +5,11 @@ const BOARD_THEMES = [
         light: 'rgb(240, 217, 181)',
     },
     {
+        name: 'suite',
+        dark: 'rgb(62, 64, 62)',
+        light: 'rgb(157, 158, 157)'
+    },
+    {
         name: 'ruby',
         dark: 'rgb(181, 99, 99)',
         light: 'rgb(240, 181, 181)',

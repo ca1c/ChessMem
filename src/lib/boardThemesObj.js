@@ -3,6 +3,10 @@ const BOARD_THEMES_OBJ = {
         dark: 'rgb(181, 136, 99)',
         light: 'rgb(240, 217, 181)',
     },
+    suite: {
+        dark: 'rgb(62, 64, 62)',
+        light: 'rgb(157, 158, 157)'
+    },
     ruby: {
         dark: 'rgb(181, 99, 99)',
         light: 'rgb(240, 181, 181)',
