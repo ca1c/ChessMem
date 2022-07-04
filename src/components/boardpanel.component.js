@@ -126,6 +126,7 @@ class BoardPanel extends Component {
                             <Button variant="outlined" onClick={this.toggleOptions}>Options</Button>
                             <Button onClick={this.startComparison}>Compare</Button>
                             <Button variant="contained" disabled>00:{this.state.timer}</Button>
+                            <Button variant="outlined" disabled>{this.state.correct ? "Correct" : "Incorrect"}</Button> 
                         </Stack>
                     </Grid>
                     <Grid item>
